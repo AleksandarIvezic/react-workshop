@@ -1,34 +1,30 @@
 import React from 'react'
-import { useState } from 'react';
-
-import { generateItems } from './helpers/generateItems';
-import Items from './components/Items';
-
-const dummyItemList = generateItems();
-
-function filterItems(filterState) {
-  if (!filterState) {
-    return dummyItemList;
-  }
-  return dummyItemList.filter((item) => item.includes(filterState));
-}
+import { Route, Switch, Redirect } from 'react-router-dom';
+import Welcome from './pages/Welcome';
+import Products from './pages/Products';
+import ProductDetail from './pages/ProductDetail';
+import MainHeader from './components/MainHeader';
 
 const Layout = () => {
-  const [filterState, setFilterState] = useState('');
-  const [displayState, setDisplayState] = useState('');
-
-  const filteredItems = filterItems(filterState);
-
-  function updateFilterHandler(event) {
-  setFilterState(event.target.value);
-  setDisplayState(event.target.value)
-  }
-
   return (
-    <div id="app">
-      <input type="text" onBlur={updateFilterHandler} />
-      <p>Filter value: {displayState || '"none"'}</p>
-      <Items items={filteredItems} />
+    <div>
+      <MainHeader />
+      <main>
+        <Switch>
+          <Route path='/' exact>
+            <Redirect to='/welcome' />
+          </Route>
+          <Route path='/welcome'>
+            <Welcome />
+          </Route>
+          <Route path='/products' exact>
+            <Products />
+          </Route>
+          <Route path='/products/:productId'>
+            <ProductDetail />
+          </Route>
+        </Switch>
+      </main>
     </div>
   );
 }
